@@ -29,13 +29,14 @@ interface EditorProps {
   onAwarenessUpdate?: (awareness: any) => void;
   onSyncChange?: (isSynced: boolean) => void;
   onSaveStatusChange?: (saving: boolean) => void;
+  onEditorReady?: (editor: any) => void;
 }
 
 const COLORS = ["#ffffff", "#e5e5e5", "#a3a3a3", "#737373", "#525252", "#404040"];
 
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
-export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenessUpdate, onSyncChange, onSaveStatusChange }: EditorProps) {
+export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenessUpdate, onSyncChange, onSaveStatusChange, onEditorReady }: EditorProps) {
   const { user, userProfile } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   
@@ -177,6 +178,12 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
     },
     [ydoc, handleTyping]
   );
+
+  useEffect(() => {
+    if (editor && onEditorReady) {
+      onEditorReady(editor);
+    }
+  }, [editor, onEditorReady]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: "100%" }}>

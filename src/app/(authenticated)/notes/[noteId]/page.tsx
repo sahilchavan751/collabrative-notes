@@ -28,6 +28,9 @@ function NoteContent() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [isSynced, setIsSynced] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editorInstance, setEditorInstance] = useState<any>(null);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const exportMenuRef = React.useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
   useEffect(() => {
@@ -63,6 +66,176 @@ function NoteContent() {
       }
     }, 1000);
     setTitleSaveTimeout(timeout);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target as Node)) {
+        setExportMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const downloadFile = (filename: string, content: string, contentType: string) => {
+    const element = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const handleExport = (format: 'txt' | 'html' | 'md' | 'pdf') => {
+    setExportMenuOpen(false);
+    if (!editorInstance) return;
+
+    const safeTitle = (title || "Untitled_Note").replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    
+    if (format === 'pdf') {
+      const htmlContent = editorInstance.getHTML();
+      const printHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${title || "Untitled Note"}</title>
+<style>
+  @page { margin: 0; }
+  @media print {
+    body { padding: 20mm !important; margin: 0 !important; }
+  }
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; color: #000; }
+  pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; border: 1px solid #ddd; }
+  code { font-family: monospace; background: #f4f4f4; padding: 2px 4px; border-radius: 3px; border: 1px solid #eee; }
+  blockquote { border-left: 4px solid #ccc; margin: 0; padding-left: 16px; color: #555; }
+  h1, h2, h3 { color: #000; }
+  ul[data-type="taskList"] { list-style: none; padding: 0; }
+  ul[data-type="taskList"] li { display: flex; align-items: flex-start; margin-bottom: 8px; }
+  ul[data-type="taskList"] input { margin-right: 8px; margin-top: 4px; }
+  ul[data-type="taskList"] li[data-checked="true"] div { text-decoration: line-through; opacity: 0.6; }
+</style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+
+      const printIframe = document.createElement('iframe');
+      printIframe.style.position = 'absolute';
+      printIframe.style.width = '0px';
+      printIframe.style.height = '0px';
+      printIframe.style.border = 'none';
+      document.body.appendChild(printIframe);
+      
+      const printDocument = printIframe.contentWindow?.document;
+      if (printDocument) {
+        printDocument.open();
+        printDocument.write(printHtml);
+        printDocument.close();
+        
+        setTimeout(() => {
+          printIframe.contentWindow?.focus();
+          printIframe.contentWindow?.print();
+          setTimeout(() => {
+            document.body.removeChild(printIframe);
+          }, 1000);
+        }, 500);
+      } else {
+        window.print();
+        document.body.removeChild(printIframe);
+      }
+      return;
+    }
+
+    if (format === 'txt') {
+      const textContent = editorInstance.getText();
+      downloadFile(`${safeTitle}.txt`, textContent, 'text/plain');
+    } else if (format === 'html') {
+      const htmlContent = editorInstance.getHTML();
+      const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${title || "Untitled Note"}</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
+  pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  code { font-family: monospace; background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+  blockquote { border-left: 4px solid #ccc; margin: 0; padding-left: 16px; color: #666; }
+  h1, h2, h3 { color: #111; }
+  ul[data-type="taskList"] { list-style: none; padding: 0; }
+  ul[data-type="taskList"] li { display: flex; align-items: flex-start; margin-bottom: 8px; }
+  ul[data-type="taskList"] input { margin-right: 8px; margin-top: 4px; }
+  ul[data-type="taskList"] li[data-checked="true"] div { text-decoration: line-through; opacity: 0.6; }
+</style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
+      downloadFile(`${safeTitle}.html`, fullHtml, 'text/html');
+    } else if (format === 'md') {
+      // Basic HTML to Markdown converter
+      let html = editorInstance.getHTML();
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      
+      let md = '';
+      
+      const processNode = (node: Node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          md += node.textContent;
+          return;
+        }
+        
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const el = node as HTMLElement;
+          const tag = el.tagName.toLowerCase();
+          
+          if (tag === 'h1') md += '# ';
+          if (tag === 'h2') md += '## ';
+          if (tag === 'h3') md += '### ';
+          if (tag === 'strong' || tag === 'b') md += '**';
+          if (tag === 'em' || tag === 'i') md += '*';
+          if (tag === 'code' && el.parentNode?.nodeName !== 'PRE') md += '`';
+          if (tag === 'pre') md += '\n```\n';
+          if (tag === 'blockquote') md += '\n> ';
+          if (tag === 'p' && md.length > 0 && !md.endsWith('\n\n')) md += '\n\n';
+          if (tag === 'li') {
+            const parentList = el.closest('ul, ol');
+            if (parentList) {
+               if (parentList.getAttribute('data-type') === 'taskList') {
+                  const isChecked = el.getAttribute('data-checked') === 'true';
+                  md += `\n- [${isChecked ? 'x' : ' '}] `;
+               } else if (parentList.tagName.toLowerCase() === 'ol') {
+                  md += '\n1. ';
+               } else {
+                  md += '\n- ';
+               }
+            }
+          }
+          if (tag === 'a') md += '[';
+          
+          Array.from(el.childNodes).forEach(processNode);
+          
+          if (tag === 'h1' || tag === 'h2' || tag === 'h3') md += '\n\n';
+          if (tag === 'strong' || tag === 'b') md += '**';
+          if (tag === 'em' || tag === 'i') md += '*';
+          if (tag === 'code' && el.parentNode?.nodeName !== 'PRE') md += '`';
+          if (tag === 'pre') md += '\n```\n\n';
+          if (tag === 'blockquote') md += '\n\n';
+          if (tag === 'a') md += `](${el.getAttribute('href')})`;
+        }
+      };
+      
+      processNode(tempDiv);
+      md = md.replace(/\n{3,}/g, '\n\n').trim(); // clean up excessive newlines
+      downloadFile(`${safeTitle}.md`, md, 'text/markdown');
+    }
   };
 
   if (loadingNote) {
@@ -219,6 +392,8 @@ function NoteContent() {
           backdropFilter: "blur(20px)",
           flexWrap: isMobile ? "wrap" : "nowrap",
           gap: isMobile ? "12px" : "0",
+          position: "relative",
+          zIndex: 200,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "16px", flex: isMobile ? "1 1 100%" : "auto" }}>
@@ -380,24 +555,181 @@ function NoteContent() {
             </button>
           )}
 
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(window.location.href);
-              alert("Link copied! Share it with collaborators.");
-            }}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "10px",
-              background: "rgba(139,92,246,0.1)",
-              border: "1px solid rgba(139,92,246,0.3)",
-              color: "var(--accent-purple)",
-              fontSize: "13px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Share
-          </button>
+          {/* Share Button Group */}
+          <div style={{ display: "flex", gap: "8px", position: "relative" }}>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link copied! Share it with collaborators.");
+              }}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "10px",
+                background: "rgba(139,92,246,0.1)",
+                border: "1px solid rgba(139,92,246,0.3)",
+                color: "var(--accent-purple)",
+                fontSize: "13px",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Share
+            </button>
+
+            {/* Export Dropdown Container */}
+            <div ref={exportMenuRef}>
+              <button
+                onClick={() => setExportMenuOpen(!exportMenuOpen)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "8px 12px",
+                  borderRadius: "10px",
+                  background: "var(--input-bg)",
+                  border: "1px solid var(--card-border)",
+                  color: "var(--text-muted)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+                className="settings-option-hover"
+                title="Export Note"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 14, height: 14 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {!isMobile && "Export"}
+                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 12, height: 12, transform: exportMenuOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Export Menu */}
+              {exportMenuOpen && (
+                <div
+                  className="export-dropdown"
+                  style={{
+                    position: "absolute",
+                    top: "calc(100% + 8px)",
+                    right: 0,
+                    width: "160px",
+                    background: "var(--card)",
+                    border: "1px solid var(--card-border)",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
+                    padding: "6px",
+                    zIndex: 100,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <div style={{ padding: "8px 12px", fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Export As
+                  </div>
+                  
+                  <button
+                    onClick={() => handleExport('txt')}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "8px 12px",
+                      width: "100%",
+                      textAlign: "left",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "var(--foreground)",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--input-bg)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <span>📄</span> Plain Text
+                  </button>
+                  
+                  <button
+                    onClick={() => handleExport('html')}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "8px 12px",
+                      width: "100%",
+                      textAlign: "left",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "var(--foreground)",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--input-bg)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <span>&lt;/&gt;</span> HTML
+                  </button>
+                  
+                  <button
+                    onClick={() => handleExport('md')}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "8px 12px",
+                      width: "100%",
+                      textAlign: "left",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "var(--foreground)",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--input-bg)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <span>M↓</span> Markdown
+                  </button>
+                  
+                  <div style={{ height: "1px", background: "var(--card-border)", margin: "4px 0" }} />
+                  
+                  <button
+                    onClick={() => handleExport('pdf')}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "8px 12px",
+                      width: "100%",
+                      textAlign: "left",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "8px",
+                      color: "var(--foreground)",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = "var(--input-bg)"}
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    <span>🖨️</span> Print / PDF
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Active Users Toggle Button (Mobile Only) */}
           {isMobile && (
@@ -443,6 +775,7 @@ function NoteContent() {
             onAwarenessUpdate={setAwareness}
             onSyncChange={setIsSynced}
             onSaveStatusChange={setSaving}
+            onEditorReady={setEditorInstance}
           />
         </div>
 

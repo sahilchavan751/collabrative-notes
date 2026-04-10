@@ -353,3 +353,64 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   border-color: #8b5cf6 !important;
 }
+
+/* ===== Export Dropdown ===== */
+@keyframes exportDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.export-dropdown {
+  animation: exportDropdownIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  header,
+  nav,
+  aside,
+  .bottom-navigation,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  .ProseMirror {
+    min-height: auto !important;
+    color: #000 !important;
+  }
+
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror p,
+  .ProseMirror li,
+  .ProseMirror strong {
+    color: #000 !important;
+  }
+
+  .ProseMirror code {
+    background: #f3f4f6 !important;
+    color: #000 !important;
+  }
+
+  .ProseMirror pre {
+    background: #f9fafb !important;
+    border-color: #e5e7eb !important;
+  }
+
+  .ProseMirror blockquote {
+    border-left-color: #9ca3af !important;
+    color: #4b5563 !important;
+  }
+}
