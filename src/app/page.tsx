@@ -33,6 +33,22 @@ export default function HomePage() {
         <h1 className="mb-2 text-4xl font-black tracking-tighter text-white uppercase">REALNO</h1>
         <p className="mb-10 font-medium tracking-widest text-white/30 uppercase text-[10px]">Initializing Workspace</p>
         <LoadingSpinner size="lg" />
+        
+        {/* SEO Semantic Content (visually hidden) */}
+        <div className="sr-only">
+          <h2>Ultimate Online Notes Editor</h2>
+          <p>
+            REALNO is a professional platform for realtime notes and collaberative notes. 
+            Create, share, and edit notes with your team in real-time with integrated voice chat.
+            The fastest collaborative notes solution for modern teams.
+          </p>
+          <ul>
+            <li>Real-time synchronization</li>
+            <li>Collaborative notes editor</li>
+            <li>Voice-integrated note taking</li>
+            <li>Professional dark-mode aesthetics</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
