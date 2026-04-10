@@ -1,0 +1,32 @@
+"use client";
+
+import React from "react";
+
+interface SkeletonProps {
+  width?: string | number;
+  height?: string | number;
+  borderRadius?: string | number;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export default function Skeleton({ 
+  width = "100%", 
+  height = "20px", 
+  borderRadius = "8px",
+  className = "",
+  style = {}
+}: SkeletonProps) {
+  return (
+    <div
+      className={`animate-shimmer ${className}`}
+      style={{
+        width,
+        height,
+        borderRadius,
+        background: "rgba(255, 255, 255, 0.03)",
+        ...style,
+      }}
+    />
+  );
+}
