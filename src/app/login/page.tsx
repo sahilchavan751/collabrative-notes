@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import AuthForm from "../../components/AuthForm";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 export default function LoginPage() {
   const { user, loading, login, loginWithGoogle } = useAuth();
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 1024px)");
 
   useEffect(() => {
     if (!loading && user) {
@@ -29,43 +31,63 @@ export default function LoginPage() {
   return (
     <div
       style={{
-        position: "relative",
         display: "flex",
+        flexDirection: "column",
         minHeight: "100vh",
+        background: "#000",
         alignItems: "center",
         justifyContent: "center",
-        background: "#0a0a0f",
         overflow: "hidden",
-        padding: "20px",
+        position: "relative",
       }}
     >
-      {/* Background glows */}
-      <div style={{ position: "absolute", width: "500px", height: "500px", top: "10%", left: "20%", borderRadius: "50%", background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", width: "500px", height: "500px", bottom: "10%", right: "20%", borderRadius: "50%", background: "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-      {/* Grid pattern */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          opacity: 0.04,
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
+      {/* Background elements */}
+      <div 
+        style={{ 
+          position: "absolute", 
+          fontSize: isMobile ? "120px" : "280px", 
+          fontWeight: 900, 
+          color: "rgba(255,255,255,0.03)", 
+          userSelect: "none",
           pointerEvents: "none",
+          zIndex: 1,
+          letterSpacing: "-0.05em",
+          textAlign: "center",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
         }}
-      />
+      >
+        REALNO
+      </div>
 
-      <AuthForm
-        mode="login"
-        onSubmit={async (email, password) => {
-          await login(email, password);
-          router.push("/dashboard");
-        }}
-        onGoogleSignIn={async () => {
-          await loginWithGoogle();
-          router.push("/dashboard");
-        }}
-      />
+      <div style={{ position: "absolute", inset: 0, opacity: 0.1, backgroundImage: "radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)", backgroundSize: "32px 32px", pointerEvents: "none" }} />
+
+      {/* Main Content */}
+      <div style={{ position: "relative", zIndex: 10, width: "100%", display: "flex", justifyContent: "center", padding: "20px" }}>
+        <AuthForm
+          mode="login"
+          onSubmit={async (email, password) => {
+            await login(email, password);
+            router.push("/dashboard");
+          }}
+          onGoogleSignIn={async () => {
+            await loginWithGoogle();
+            router.push("/dashboard");
+          }}
+        />
+      </div>
+
+      {/* Footer Branding */}
+      <div style={{ position: "fixed", bottom: "40px", left: 0, right: 0, textAlign: "center", zIndex: 10 }}>
+        <span style={{ color: "rgba(255,255,255,0.15)", fontSize: "11px", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase" }}>
+          Next Generation Collaboration
+        </span>
+      </div>
     </div>
   );
 }

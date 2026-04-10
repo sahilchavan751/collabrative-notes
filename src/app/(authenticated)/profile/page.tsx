@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import UserAvatar from "../../../components/UserAvatar";
+import Skeleton from "../../../components/Skeleton";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfilePage() {
@@ -56,84 +57,93 @@ export default function ProfilePage() {
           
           {/* Avatar Section */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
-            <div style={{ padding: "8px", borderRadius: "50%", background: "rgba(139, 92, 246, 0.1)", border: "2px solid rgba(139, 92, 246, 0.2)" }}>
+            <div style={{ padding: "8px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.05)", border: "2px solid rgba(255, 255, 255, 0.1)" }}>
               <UserAvatar 
                 name={userProfile?.displayName || userProfile?.username || "User"} 
                 photoURL={user?.photoURL} 
                 size="lg" 
               />
             </div>
-            <button style={{ fontSize: "13px", color: "#8b5cf6", fontWeight: 600, background: "transparent", border: "none", cursor: "pointer" }}>
+            <button style={{ fontSize: "13px", color: "var(--foreground)", opacity: 0.6, fontWeight: 600, background: "transparent", border: "none", cursor: "pointer" }}>
               Change Avatar
             </button>
           </div>
 
           {/* Form Section */}
-          <form onSubmit={handleSave} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px" }}>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Full Name</label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Your display name"
-                className="input-field"
-                style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--foreground)", fontSize: "15px", outline: "none" }}
-              />
+          {!userProfile ? (
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+              <Skeleton width="200px" height="48px" borderRadius="14px" />
             </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Username</label>
-              <div style={{ position: "relative" }}>
-                <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", fontSize: "15px" }}>@</span>
+          ) : (
+            <form onSubmit={handleSave} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px" }}>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Full Name</label>
                 <input
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="username"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Your display name"
                   className="input-field"
-                  style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px 12px 34px", color: "var(--foreground)", fontSize: "15px", outline: "none", width: "100%" }}
+                  style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--foreground)", fontSize: "15px", outline: "none" }}
                 />
               </div>
-            </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
-              <input
-                type="email"
-                value={user?.email || ""}
-                disabled
-                style={{ background: "var(--background)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--text-muted)", fontSize: "15px", cursor: "not-allowed", opacity: 0.6 }}
-              />
-              <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Email cannot be changed directly.</p>
-            </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Username</label>
+                <div style={{ position: "relative" }}>
+                  <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", fontSize: "15px" }}>@</span>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="username"
+                    className="input-field"
+                    style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px 12px 34px", color: "var(--foreground)", fontSize: "15px", outline: "none", width: "100%" }}
+                  />
+                </div>
+              </div>
 
-            <div style={{ paddingTop: "20px" }}>
-              <button
-                type="submit"
-                disabled={saving}
-                className="btn-primary"
-                style={{ 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  gap: "10px", 
-                  width: "200px", 
-                  padding: "14px", 
-                  borderRadius: "14px",
-                  opacity: saving ? 0.7 : 1
-                }}
-              >
-                {saving ? (
-                  <div style={{ width: "20px", height: "20px", border: "2px solid #fff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-                ) : (
-                  "Save Changes"
-                )}
-              </button>
-            </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
+                <input
+                  type="email"
+                  value={user?.email || ""}
+                  disabled
+                  style={{ background: "var(--background)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--text-muted)", fontSize: "15px", cursor: "not-allowed", opacity: 0.6 }}
+                />
+                <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Email cannot be changed directly.</p>
+              </div>
 
-          </form>
+              <div style={{ paddingTop: "20px" }}>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn-primary"
+                  style={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    justifyContent: "center", 
+                    gap: "10px", 
+                    width: "200px", 
+                    padding: "14px", 
+                    borderRadius: "14px",
+                    opacity: saving ? 0.7 : 1
+                  }}
+                >
+                  {saving ? (
+                    <div style={{ width: "20px", height: "20px", border: "2px solid #fff", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+              </div>
+
+            </form>
+          )}
 
         </div>
 

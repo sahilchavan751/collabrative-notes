@@ -19,6 +19,7 @@ import { FireProvider } from "y-fire";
 import { app } from "../lib/firebase";
 import { updateNoteSnapshot } from "../lib/firestore";
 import EditorToolbar from "./EditorToolbar";
+import Skeleton from "./Skeleton";
 import { useAuth } from "../hooks/useAuth";
 
 interface EditorProps {
@@ -30,7 +31,7 @@ interface EditorProps {
   onSaveStatusChange?: (saving: boolean) => void;
 }
 
-const COLORS = ["#8b5cf6", "#3b82f6", "#22c55e", "#ef4444", "#f59e0b", "#ec4899"];
+const COLORS = ["#ffffff", "#e5e5e5", "#a3a3a3", "#737373", "#525252", "#404040"];
 
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
@@ -162,10 +163,10 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
         Subscript,
         ...(ydoc
           ? [
-              Collaboration.configure({
-                document: ydoc,
-              }),
-            ]
+               Collaboration.configure({
+                 document: ydoc,
+               }),
+             ]
           : []),
       ],
       onUpdate: ({ editor }) => {
@@ -202,21 +203,12 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
         {editor ? (
           <EditorContent editor={editor} />
         ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 0" }}>
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  margin: "0 auto 16px",
-                  border: "3px solid #8b5cf6",
-                  borderTop: "3px solid transparent",
-                  borderRadius: "50%",
-                  animation: "spin 1s linear infinite",
-                }}
-              />
-              <p style={{ fontSize: "14px", color: "#6b7280" }}>Loading editor...</p>
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <Skeleton width="60%" height="24px" style={{ marginBottom: "16px" }} />
+            <Skeleton width="95%" height="16px" />
+            <Skeleton width="90%" height="16px" />
+            <Skeleton width="92%" height="16px" />
+            <Skeleton width="40%" height="16px" />
           </div>
         )}
       </div>

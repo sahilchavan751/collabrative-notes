@@ -75,21 +75,31 @@ export default function BottomNavigation() {
               key={item.id}
               onClick={item.action}
               style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "14px",
-                background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
-                color: "#fff",
+                width: "56px",
+                height: "56px",
+                borderRadius: "50%",
+                background: "var(--foreground)",
+                color: "var(--background)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                border: "none",
-                transform: "translateY(-12px)",
-                boxShadow: "0 4px 12px rgba(139, 92, 246, 0.4)",
+                border: "2px solid var(--background)",
+                transform: "translateY(-16px)",
+                boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
                 cursor: "pointer",
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                zIndex: 10,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-20px) scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 18px 40px rgba(0, 0, 0, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(-16px) scale(1)";
+                e.currentTarget.style.boxShadow = "0 12px 30px rgba(0, 0, 0, 0.4)";
               }}
             >
-              {item.icon}
+              <Plus size={28} strokeWidth={3} />
             </button>
           );
         }
@@ -105,7 +115,7 @@ export default function BottomNavigation() {
               gap: "4px",
               background: "transparent",
               border: "none",
-              color: isActive ? "#8b5cf6" : "var(--text-muted)",
+              color: isActive ? "var(--foreground)" : "var(--text-muted)",
               cursor: "pointer",
               padding: "8px",
               transition: "all 0.2s",

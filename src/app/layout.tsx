@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CollabNotes — Real-time Collaborative Notes",
+  title: "REALNO — Real-time Collaborative Notes",
   description:
-    "Create, edit, and collaborate on notes in real-time with voice chat. Built with Next.js, Firebase, and Yjs.",
+    "The next generation of real-time collaborative notes with integrated voice chat. Built for modern teams.",
   keywords: ["collaborative notes", "real-time editing", "voice chat", "note taking"],
 };
 

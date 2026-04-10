@@ -161,10 +161,13 @@ export default function SecondarySidebar() {
       <div style={{ flex: 1, overflowY: "auto", padding: "12px" }}>
         {loading ? (
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} style={{ padding: "12px", borderRadius: "12px", background: "var(--card)", border: "1px solid var(--card-border)" }}>
-                <Skeleton width="60%" height="16px" style={{ marginBottom: "8px" }} />
-                <Skeleton width="90%" height="12px" />
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} style={{ padding: "14px", borderRadius: "12px", background: "var(--card)", border: "1px solid var(--card-border)", marginBottom: "8px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+                   <Skeleton width="12px" height="12px" borderRadius="4px" />
+                   <Skeleton width="50%" height="14px" />
+                </div>
+                <Skeleton width="85%" height="11px" />
               </div>
             ))}
           </div>
@@ -186,22 +189,22 @@ export default function SecondarySidebar() {
                   style={{
                     padding: "14px",
                     borderRadius: "12px",
-                    background: isActive ? "rgba(139, 92, 246, 0.15)" : "transparent",
-                    border: isActive ? "1px solid rgba(139, 92, 246, 0.2)" : "1px solid transparent",
+                    background: isActive ? "var(--foreground)" : "transparent",
+                    border: isActive ? "1px solid var(--foreground)" : "1px solid transparent",
                     cursor: "pointer",
-                    transition: "all 0.2s",
+                    transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive && !isMobile) e.currentTarget.style.background = "rgba(139, 92, 246, 0.05)";
+                    if (!isActive && !isMobile) e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive && !isMobile) e.currentTarget.style.background = "transparent";
                   }}
                 >
-                  <h4 style={{ fontSize: "14px", fontWeight: 600, color: isActive ? "#8b5cf6" : "var(--foreground)", margin: "0 0 4px 0" }}>
+                  <h4 style={{ fontSize: "14px", fontWeight: 700, color: isActive ? "var(--background)" : "var(--foreground)", margin: "0 0 4px 0" }}>
                     {note.title || "Untitled Note"}
                   </h4>
-                  <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <p style={{ fontSize: "12px", color: isActive ? "var(--background)" : "var(--text-muted)", opacity: isActive ? 0.7 : 1, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {snippet || "No content..."}
                   </p>
                 </div>
@@ -223,11 +226,11 @@ export default function SecondarySidebar() {
             height: "100%",
             cursor: "col-resize",
             zIndex: 50,
-            background: isResizing ? "var(--accent-purple)" : "transparent",
+            background: isResizing ? "var(--foreground)" : "transparent",
             transition: "background 0.2s",
           }}
           onMouseEnter={(e) => {
-            if (!isResizing) e.currentTarget.style.background = "rgba(139, 92, 246, 0.2)";
+            if (!isResizing) e.currentTarget.style.background = "rgba(0, 0, 0, 0.1)";
           }}
           onMouseLeave={(e) => {
             if (!isResizing) e.currentTarget.style.background = "transparent";

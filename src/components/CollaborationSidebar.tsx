@@ -38,7 +38,7 @@ export default function CollaborationSidebar({ awareness }: CollaborationSidebar
               uid,
               name: state.user.name || "Anonymous",
               isTyping: isTyping,
-              color: state.user.color || "#8b5cf6"
+              color: state.user.color || "var(--foreground)"
             });
           }
         }
@@ -76,10 +76,10 @@ export default function CollaborationSidebar({ awareness }: CollaborationSidebar
           style={{
             padding: "4px 10px",
             borderRadius: "20px",
-            background: "rgba(139, 92, 246, 0.1)",
-            color: "#8b5cf6",
+            background: "var(--foreground)",
+            color: "var(--background)",
             fontSize: "12px",
-            fontWeight: 700,
+            fontWeight: 800,
           }}
         >
           {users.length}
@@ -122,7 +122,7 @@ export default function CollaborationSidebar({ awareness }: CollaborationSidebar
                   {u.name}
                 </p>
                 {u.isTyping && (
-                  <p style={{ fontSize: "11px", color: "#8b5cf6", margin: 0, animation: "pulse 1.5s infinite" }}>
+                  <p style={{ fontSize: "11px", color: "var(--foreground)", opacity: 0.6, margin: 0, animation: "pulse 1.5s infinite" }}>
                     typing...
                   </p>
                 )}
@@ -144,18 +144,18 @@ export default function CollaborationSidebar({ awareness }: CollaborationSidebar
           style={{
             marginTop: "16px",
             padding: "10px",
-            background: "rgba(139, 92, 246, 0.05)",
+            background: "rgba(255, 255, 255, 0.05)",
             borderRadius: "10px",
-            border: "1px solid rgba(139, 92, 246, 0.1)",
+            border: "1px solid var(--card-border)",
           }}
         >
           <p style={{ fontSize: "12px", color: "var(--foreground)", margin: 0, display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ display: "flex", gap: "2px" }}>
-              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#8b5cf6" }} />
-              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#8b5cf6", animationDelay: "0.2s" }} />
-              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#8b5cf6", animationDelay: "0.4s" }} />
+              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--foreground)" }} />
+              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--foreground)", animationDelay: "0.2s" }} />
+              <span className="dot animate-dot-bounce" style={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--foreground)", animationDelay: "0.4s" }} />
             </span>
-            <span style={{ fontWeight: 600, color: "#8b5cf6" }}>
+            <span style={{ fontWeight: 700, color: "var(--foreground)" }}>
               {typingUsers.length === 1 
                 ? `${typingUsers[0].name} is typing...`
                 : `${typingUsers.length} users are typing...`}

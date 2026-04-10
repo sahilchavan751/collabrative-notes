@@ -51,82 +51,39 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    padding: "14px 16px",
-    borderRadius: "12px",
-    background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    padding: "16px 18px",
+    borderRadius: "14px",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.08)",
     color: "#fff",
     fontSize: "14px",
     outline: "none",
-    transition: "all 0.3s",
+    transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
   };
 
   return (
-    <div style={{ width: "100%", maxWidth: "420px" }}>
+    <div style={{ width: "100%", maxWidth: "440px" }}>
       {/* Card */}
       <div
         style={{
           position: "relative",
           overflow: "hidden",
-          borderRadius: "24px",
-          background: "rgba(20,20,35,0.8)",
+          borderRadius: "32px",
+          background: "rgba(10,10,10,0.7)",
           border: "1px solid rgba(255,255,255,0.08)",
-          padding: "40px 36px",
-          boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 80px rgba(139,92,246,0.06)",
-          backdropFilter: "blur(40px)",
+          padding: "48px 40px",
+          boxShadow: "0 40px 100px rgba(0,0,0,0.8)",
+          backdropFilter: "blur(60px)",
         }}
       >
-        {/* Glow decorations */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-60px",
-            right: "-60px",
-            width: "160px",
-            height: "160px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-60px",
-            left: "-60px",
-            width: "160px",
-            height: "160px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(59,130,246,0.1), transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-
         <div style={{ position: "relative", zIndex: 10 }}>
           {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: "32px" }}>
-            <div
-              style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "16px",
-                background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 16px",
-                boxShadow: "0 8px 25px rgba(139,92,246,0.35)",
-              }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 28, height: 28, color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </div>
-            <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#fff", margin: "0 0 6px 0" }}>
-              {mode === "login" ? "Welcome back" : "Create account"}
+          <div style={{ textAlign: "center", marginBottom: "40px" }}>
+            <h1 style={{ fontSize: "32px", fontWeight: 800, color: "#fff", margin: "0 0 8px 0", letterSpacing: "-0.03em" }}>
+              {mode === "login" ? "Sign In" : "Register"}
             </h1>
-            <p style={{ fontSize: "14px", color: "#9ca3af", margin: 0 }}>
-              {mode === "login" ? "Sign in to continue to your notes" : "Start collaborating in real-time"}
+            <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.5)", margin: 0, fontWeight: 400 }}>
+              {mode === "login" ? "Enter your credentials to access RealNote" : "Create an account to start collaborating"}
             </p>
           </div>
 
@@ -134,13 +91,14 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
           {error && (
             <div
               style={{
-                padding: "12px 16px",
-                borderRadius: "12px",
-                background: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.25)",
-                color: "#f87171",
+                padding: "14px 18px",
+                borderRadius: "14px",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#ff5555",
                 fontSize: "13px",
-                marginBottom: "20px",
+                marginBottom: "24px",
+                textAlign: "center",
               }}
             >
               {error}
@@ -149,43 +107,43 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               {mode === "signup" && (
                 <div>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "#d1d5db", marginBottom: "6px" }}>
+                  <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Username
                   </label>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Choose a username"
+                    placeholder="Username"
                     style={inputStyle}
-                    onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(139,92,246,0.1)"; }}
-                    onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
                     required
                   />
                 </div>
               )}
 
               <div>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "#d1d5db", marginBottom: "6px" }}>
-                  Email
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Email Address
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder="name@example.com"
                   style={inputStyle}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(139,92,246,0.1)"; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
                   required
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "#d1d5db", marginBottom: "6px" }}>
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.4)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                   Password
                 </label>
                 <input
@@ -194,8 +152,8 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   style={inputStyle}
-                  onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(139,92,246,0.5)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(139,92,246,0.1)"; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.boxShadow = "none"; }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
                   required
                   minLength={6}
                 />
@@ -206,19 +164,20 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
                 disabled={loading}
                 style={{
                   width: "100%",
-                  padding: "14px",
-                  borderRadius: "12px",
-                  background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                  padding: "16px",
+                  borderRadius: "14px",
+                  background: "#fff",
                   border: "none",
-                  color: "#fff",
+                  color: "#000",
                   fontSize: "15px",
-                  fontWeight: 600,
+                  fontWeight: 700,
                   cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.6 : 1,
-                  boxShadow: "0 4px 20px rgba(139,92,246,0.3)",
-                  transition: "all 0.3s",
-                  marginTop: "4px",
+                  opacity: loading ? 0.7 : 1,
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                  marginTop: "8px",
                 }}
+                onMouseEnter={(e) => { if(!loading) e.currentTarget.style.transform = "scale(1.02)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
               >
                 {loading ? <LoadingSpinner size="sm" /> : mode === "login" ? "Sign In" : "Create Account"}
               </button>
@@ -226,29 +185,29 @@ export default function AuthForm({ mode, onSubmit, onGoogleSignIn }: AuthFormPro
           </form>
 
           {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "24px 0" }}>
-            <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent)" }} />
-            <span style={{ fontSize: "11px", fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "1.5px" }}>or</span>
-            <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", margin: "32px 0" }}>
+            <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.08)" }} />
+            <span style={{ fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.2)", textTransform: "uppercase", letterSpacing: "2px" }}>OR</span>
+            <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.08)" }} />
           </div>
 
           {/* Google */}
           <GoogleSignInButton onClick={handleGoogleSignIn} disabled={loading} />
 
           {/* Toggle */}
-          <p style={{ textAlign: "center", fontSize: "14px", color: "#9ca3af", marginTop: "24px" }}>
+          <p style={{ textAlign: "center", fontSize: "14px", color: "rgba(255,255,255,0.4)", marginTop: "32px" }}>
             {mode === "login" ? (
               <>
-                Don&apos;t have an account?{" "}
-                <Link href="/signup" style={{ color: "#a78bfa", fontWeight: 500, textDecoration: "none" }}>
-                  Sign up
+                New to RealNote?{" "}
+                <Link href="/signup" style={{ color: "#fff", fontWeight: 600, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                  Create an account
                 </Link>
               </>
             ) : (
               <>
-                Already have an account?{" "}
-                <Link href="/login" style={{ color: "#a78bfa", fontWeight: 500, textDecoration: "none" }}>
-                  Sign in
+                Have an account?{" "}
+                <Link href="/login" style={{ color: "#fff", fontWeight: 600, textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                   Sign in
                 </Link>
               </>
             )}

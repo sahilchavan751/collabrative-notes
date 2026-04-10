@@ -27,15 +27,18 @@ export default function PrimarySidebar() {
       path: "/dashboard"
     },
     { 
-      id: "profile", 
+      id: "new", 
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
       ),
-      label: "Profile",
-      path: "/profile"
+      label: "New Note",
+      action: () => router.push("/dashboard?action=new")
     },
+  ];
+
+  const secondaryItems = [
     { 
       id: "settings", 
       icon: (
@@ -48,16 +51,58 @@ export default function PrimarySidebar() {
       path: "/settings"
     },
     { 
-      id: "new", 
+      id: "profile", 
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
+        <UserAvatar 
+          name={userProfile?.username || user?.displayName || "User"} 
+          photoURL={user?.photoURL} 
+          size="xs" 
+          style={{ transition: "none" }}
+        />
       ),
-      label: "New Note",
-      action: () => router.push("/dashboard?action=new")
+      label: "Profile",
+      path: "/profile"
     },
   ];
+
+  const renderNavItem = (item: any) => {
+    const isActive = item.id !== "new" && item.path && pathname === item.path;
+    return (
+      <button
+        key={item.id}
+        onClick={item.action || (() => item.path && router.push(item.path))}
+        title={item.label}
+        style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "12px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: isActive ? "var(--foreground)" : "transparent",
+          color: isActive ? "var(--background)" : "var(--text-muted)",
+          border: item.id === "profile" && !isActive ? "2px solid var(--card-border)" : "none",
+          cursor: "pointer",
+          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          overflow: "hidden"
+        }}
+        onMouseEnter={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
+            e.currentTarget.style.color = "var(--foreground)";
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--text-muted)";
+          }
+        }}
+      >
+        {item.icon}
+      </button>
+    );
+  };
 
   return (
     <aside
@@ -68,123 +113,54 @@ export default function PrimarySidebar() {
         borderRight: "1px solid var(--sidebar-border)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "space-between",
         alignItems: "center",
         transition: "all 0.3s ease",
+        paddingBottom: "20px"
       }}
     >
-      {/* Header Alignment Area */}
-      <div
-        style={{
-          height: "72px",
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottom: "1px solid var(--sidebar-border)",
-          marginBottom: "20px",
-        }}
-      >
-        {/* App Logo Icon */}
+      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {/* Header Alignment Area */}
         <div
           style={{
-            width: "44px",
-            height: "44px",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+            height: "72px",
+            width: "100%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#fff",
-            cursor: "pointer",
-            boxShadow: "0 4px 12px rgba(139, 92, 246, 0.3)",
+            borderBottom: "1px solid var(--sidebar-border)",
+            marginBottom: "20px",
           }}
-          onClick={() => router.push("/dashboard")}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
+          {/* App Logo Icon */}
+          <div
+            style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "12px",
+              background: "var(--foreground)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--background)",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+            onClick={() => router.push("/dashboard")}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </div>
+        </div>
+
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+          {menuItems.map(renderNavItem)}
         </div>
       </div>
 
-      <div style={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-        {menuItems.map((item) => {
-          const isActive = item.id !== "new" && item.path && pathname === item.path;
-          return (
-            <button
-              key={item.id}
-              onClick={item.action || (() => item.path && router.push(item.path))}
-              title={item.label}
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: isActive ? "rgba(139, 92, 246, 0.15)" : "transparent",
-                color: isActive ? "#a78bfa" : "var(--text-muted)",
-                border: "none",
-                cursor: "pointer",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = "rgba(139, 92, 246, 0.05)";
-                  e.currentTarget.style.color = "#8b5cf6";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "var(--text-muted)";
-                }
-              }}
-            >
-              {item.icon}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* User profile actions */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", paddingBottom: "24px" }}>
-        <div style={{ position: "relative", cursor: "pointer" }}>
-          <UserAvatar 
-            name={userProfile?.username || user?.displayName || "User"} 
-            photoURL={user?.photoURL} 
-            size="sm" 
-          />
-        </div>
-        
-        <button
-          onClick={handleLogout}
-          title="Logout"
-          style={{
-            width: "44px",
-            height: "44px",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "transparent",
-            color: "var(--text-muted)",
-            border: "none",
-            cursor: "pointer",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#ef4444";
-            e.currentTarget.style.background = "rgba(239, 68, 68, 0.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "var(--text-muted)";
-            e.currentTarget.style.background = "transparent";
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 22, height: 22 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
-        </button>
+      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+        {secondaryItems.map(renderNavItem)}
       </div>
     </aside>
   );

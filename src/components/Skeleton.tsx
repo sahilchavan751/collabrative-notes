@@ -24,7 +24,7 @@ export default function Skeleton({
         width,
         height,
         borderRadius,
-        background: "rgba(255, 255, 255, 0.03)",
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
         ...style,
       }}
     />

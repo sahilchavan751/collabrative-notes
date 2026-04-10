@@ -67,12 +67,132 @@ function NoteContent() {
 
   if (loadingNote) {
     return (
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100vh", background: "var(--background)" }}>
-        <header style={{ height: "72px", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", padding: "0 28px" }}>
-          <Skeleton width="200px" height="24px" />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", position: "relative", zIndex: 10, background: "var(--background)" }}>
+        {/* Header Skeleton */}
+        <header
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            height: isMobile ? "auto" : "72px",
+            minHeight: "72px",
+            padding: isMobile ? "12px 20px" : "0 28px",
+            borderBottom: "1px solid var(--card-border)",
+            background: "var(--background)",
+            backdropFilter: "blur(20px)",
+            flexWrap: isMobile ? "wrap" : "nowrap",
+            gap: isMobile ? "12px" : "0",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "16px", flex: isMobile ? "1 1 100%" : "auto" }}>
+             <Skeleton width="80px" height="36px" borderRadius="10px" />
+             {!isMobile && <div style={{ width: "1px", height: "24px", background: "var(--card-border)", margin: "0 4px" }} />}
+             <Skeleton width="180px" height="24px" />
+             {isMobile && <Skeleton width="10px" height="10px" borderRadius="50%" style={{ marginLeft: "auto" }} />}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+             {!isMobile && <Skeleton width="80px" height="16px" style={{ marginRight: "8px" }} />}
+             <Skeleton width={isMobile ? "90px" : "110px"} height="36px" borderRadius="14px" />
+             <Skeleton width="60px" height="36px" borderRadius="10px" />
+             {isMobile && <Skeleton width="36px" height="36px" borderRadius="10px" />}
+          </div>
         </header>
-        <div style={{ padding: "40px", flex: 1 }}>
-          <Skeleton width="100%" height="400px" borderRadius="16px" />
+
+        {/* Content Skeleton */}
+        <div style={{ 
+          display: "flex", 
+          flex: 1, 
+          padding: isMobile ? "12px" : "24px 28px", 
+          gap: isMobile ? "0" : "24px", 
+          overflow: "hidden",
+          flexDirection: isMobile ? "column" : "row",
+          position: "relative"
+        }}>
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", overflowY: "auto" }}>
+             <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: "100%" }}>
+                {/* Toolbar area skeleton */}
+                <div style={{ marginBottom: isMobile ? "0px" : "16px" }}>
+                  {!isMobile && (
+                    <div 
+                      style={{ 
+                        display: "flex", 
+                        flexWrap: "wrap",
+                        alignItems: "center", 
+                        gap: "4px", 
+                        padding: "8px 12px", 
+                        background: "var(--input-bg)", 
+                        borderRadius: "12px", 
+                        border: "1px solid var(--card-border)" 
+                      }}
+                    >
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <div style={{ width: "1px", height: "24px", background: "var(--card-border)", margin: "0 6px" }} />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <div style={{ width: "1px", height: "24px", background: "var(--card-border)", margin: "0 6px" }} />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                      <Skeleton width="32px" height="32px" borderRadius="8px" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Content area */}
+                <div 
+                  style={{ 
+                    flex: 1,
+                    background: "var(--card)", 
+                    border: "1px solid var(--card-border)", 
+                    borderRadius: "16px", 
+                    padding: "24px",
+                    marginBottom: isMobile ? "80px" : "0",
+                    minHeight: "400px"
+                  }}
+                >
+                  <Skeleton width="40%" height="32px" style={{ marginBottom: "32px" }} />
+                  
+                  <Skeleton width="95%" height="18px" style={{ marginBottom: "12px" }} />
+                  <Skeleton width="90%" height="18px" style={{ marginBottom: "12px" }} />
+                  <Skeleton width="92%" height="18px" style={{ marginBottom: "12px" }} />
+                  <Skeleton width="40%" height="18px" style={{ marginBottom: "32px" }} />
+
+                  <Skeleton width="85%" height="18px" style={{ marginBottom: "12px" }} />
+                  <Skeleton width="80%" height="18px" style={{ marginBottom: "12px" }} />
+                  <Skeleton width="88%" height="18px" style={{ marginBottom: "12px" }} />
+                </div>
+             </div>
+          </div>
+
+          {!isMobile && (
+            <aside style={{ width: "280px", flexShrink: 0 }}>
+               <div style={{ 
+                 height: "100%", 
+                 borderRadius: "16px", 
+                 background: "var(--card)", 
+                 border: "1px solid var(--card-border)",
+                 padding: "20px",
+                 display: "flex",
+                 flexDirection: "column"
+               }}>
+                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+                    <Skeleton width="80px" height="18px" />
+                    <Skeleton width="24px" height="24px" borderRadius="12px" />
+                 </div>
+                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                   {[1, 2, 3].map(i => (
+                     <div key={i} style={{ display: "flex", gap: "12px", alignItems: "center", padding: "8px", background: "var(--input-bg)", borderRadius: "12px", border: "1px solid var(--card-border)" }}>
+                        <Skeleton width="32px" height="32px" borderRadius="16px" />
+                        <Skeleton width="80px" height="14px" />
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </aside>
+          )}
         </div>
       </div>
     );
@@ -203,18 +323,30 @@ function NoteContent() {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "8px 12px",
-                borderRadius: "10px",
-                background: "linear-gradient(135deg, #16a34a, #059669)",
-                border: "none",
-                color: "#fff",
+                padding: "8px 16px",
+                borderRadius: "14px",
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                color: "var(--foreground)",
                 fontSize: "13px",
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: "pointer",
-                boxShadow: "0 4px 15px rgba(22,163,74,0.2)",
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                letterSpacing: "0.02em",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
               }}
             >
-              🎙️ <span style={{ display: isMobile ? "none" : "inline" }}>Join Voice</span>
+              <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 14, height: 14, opacity: 0.8 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span style={{ display: isMobile ? "none" : "inline" }}>Join Voice</span>
             </button>
           ) : (
             <button
@@ -223,19 +355,28 @@ function NoteContent() {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "8px 12px",
-                borderRadius: "10px",
-                background: "rgba(34, 197, 94, 0.1)",
-                border: "1px solid rgba(34, 197, 94, 0.3)",
-                color: "#4ade80",
-                fontSize: "13px",
-                fontWeight: 600,
+                padding: "8px 16px",
+                borderRadius: "14px",
+                background: "var(--foreground)",
+                border: "none",
+                color: "var(--background)",
+                fontSize: "12px",
+                fontWeight: 800,
                 cursor: "pointer",
-                animation: "pulseShadow 2s infinite",
+                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.1)",
               }}
             >
-              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e" }} />
-              <span style={{ display: isMobile ? "none" : "inline" }}>In Call ({participants.length})</span>
+              <div
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  background: "#22c55e",
+                  boxShadow: "0 0 8px #22c55e",
+                }}
+              />
+              <span style={{ display: isMobile ? "none" : "inline" }}>Active Call</span>
             </button>
           )}
 

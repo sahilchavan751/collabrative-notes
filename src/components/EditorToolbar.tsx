@@ -120,9 +120,9 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
         border: "none",
         cursor: "pointer",
         fontSize: "14px",
-        transition: "all 0.15s",
-        background: btn.isActive ? "rgba(139,92,246,0.2)" : "transparent",
-        color: btn.isActive ? "#c4b5fd" : "var(--text-muted)",
+        transition: "all 0.15s cubic-bezier(0.16, 1, 0.3, 1)",
+        background: btn.isActive ? "var(--foreground)" : "transparent",
+        color: btn.isActive ? "var(--background)" : "var(--text-muted)",
       }}
       onMouseEnter={(e) => {
         if (!btn.isActive && !isMobile) {
@@ -212,9 +212,9 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             width: "36px",
             height: "36px",
             borderRadius: "8px",
-            background: isExpanded ? "var(--accent-purple)" : "var(--card)",
+            background: isExpanded ? "var(--foreground)" : "var(--card)",
             border: "1px solid var(--card-border)",
-            color: isExpanded ? "#fff" : "var(--foreground)",
+            color: isExpanded ? "var(--background)" : "var(--foreground)",
             transition: "all 0.2s"
           }}
         >

@@ -44,12 +44,13 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
           position: "relative",
           width: "100%",
           maxWidth: "400px",
-          background: "rgba(20, 20, 31, 0.95)",
-          borderRadius: "24px",
+          background: "rgba(10, 10, 10, 0.7)",
+          borderRadius: "32px",
           border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.3)",
+          boxShadow: "0 40px 100px rgba(0, 0, 0, 0.8)",
+          backdropFilter: "blur(60px)",
           overflow: "hidden",
-          animation: "modalFadeIn 0.3s ease-out",
+          animation: "modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
         <div style={{ padding: "24px" }}>
@@ -92,14 +93,14 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                     width: "60px",
                     height: "60px",
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                    background: "var(--foreground)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "20px",
-                    fontWeight: 700,
-                    color: "#fff",
-                    boxShadow: "0 4px 15px rgba(139, 92, 246, 0.2)",
+                    fontWeight: 800,
+                    color: "var(--background)",
+                    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
                     position: "relative",
                   }}
                 >
@@ -114,7 +115,7 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                       height: "14px",
                       borderRadius: "50%",
                       background: "#22c55e",
-                      border: "3px solid #14141f",
+                      border: "3px solid rgba(10, 10, 10, 1)",
                     }}
                   />
                 </div>

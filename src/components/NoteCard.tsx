@@ -47,8 +47,8 @@ export default function NoteCard({ note, onDelete, isOwner }: NoteCardProps) {
         position: "relative",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "#8b5cf6";
-        e.currentTarget.style.boxShadow = "0 8px 30px rgba(139,92,246,0.12)";
+        e.currentTarget.style.borderColor = "var(--foreground)";
+        e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.1)";
         e.currentTarget.style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {

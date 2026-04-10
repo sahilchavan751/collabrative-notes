@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
 import { getUserNotes, createNote, deleteNote } from "../../../lib/firestore";
 import { Note } from "../../../types";
@@ -12,6 +12,7 @@ import toast, { Toaster } from "react-hot-toast";
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [notes, setNotes] = useState<Note[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -32,6 +33,15 @@ export default function DashboardPage() {
     };
     if (user) fetchNotes();
   }, [user]);
+
+  useEffect(() => {
+    const action = searchParams.get("action");
+    if (action === "new" && user && !creating) {
+      handleCreateNote();
+      // Clean up the URL only after creation triggered
+      router.replace("/dashboard");
+    }
+  }, [searchParams, user, creating]);
 
   const handleCreateNote = async () => {
     if (!user) return;
@@ -100,18 +110,31 @@ export default function DashboardPage() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            padding: "10px 20px",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+            gap: "10px",
+            padding: "10px 22px",
+            borderRadius: "14px",
+            background: "var(--foreground)",
             border: "none",
-            color: "#fff",
+            color: "var(--background)",
             fontSize: "14px",
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: "pointer",
-            boxShadow: "0 4px 20px rgba(139,92,246,0.3)",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
             opacity: creating ? 0.6 : 1,
-            transition: "all 0.3s ease",
+            transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+            letterSpacing: "0.02em",
+          }}
+          onMouseEnter={(e) => {
+            if (!creating) {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 15px 35px rgba(0,0,0,0.25)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!creating) {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.15)";
+            }
           }}
         >
           {creating ? (
@@ -147,11 +170,15 @@ export default function DashboardPage() {
             }}
           >
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} style={{ height: "180px", borderRadius: "16px", background: "var(--card)", border: "1px solid var(--card-border)", padding: "20px" }}>
-                <Skeleton width="40%" height="20px" style={{ marginBottom: "16px" }} />
-                <Skeleton width="90%" height="12px" style={{ marginBottom: "8px" }} />
-                <Skeleton width="80%" height="12px" style={{ marginBottom: "8px" }} />
-                <Skeleton width="30%" height="12px" style={{ marginTop: "auto" }} />
+              <div key={i} style={{ height: "190px", borderRadius: "16px", background: "var(--card)", border: "1px solid var(--card-border)", padding: "24px", display: "flex", flexDirection: "column" }}>
+                <Skeleton width="40%" height="20px" style={{ marginBottom: "20px" }} />
+                <Skeleton width="90%" height="14px" style={{ marginBottom: "10px" }} />
+                <Skeleton width="80%" height="14px" style={{ marginBottom: "10px" }} />
+                <Skeleton width="70%" height="14px" style={{ marginBottom: "10px" }} />
+                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                   <Skeleton width="30%" height="12px" />
+                   <Skeleton width="20px" height="20px" borderRadius="6px" />
+                </div>
               </div>
             ))}
           </div>
