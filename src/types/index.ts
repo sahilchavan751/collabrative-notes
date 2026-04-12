@@ -13,6 +13,8 @@ export interface Note {
   content: string; // HTML snapshot of the document
   ownerId: string;
   collaborators: string[]; // array of UIDs
+  isPinned?: boolean;
+  isStarred?: boolean;
   createdAt: number;
   updatedAt: number;
 }

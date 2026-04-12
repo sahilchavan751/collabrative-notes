@@ -72,6 +72,12 @@ export const updateNoteSnapshot = async (noteId: string, content: string, title?
   await setDoc(noteRef, updates, { merge: true });
 };
 
+// Update note metadata (e.g., pinned or starred)
+export const updateNoteMetadata = async (noteId: string, updates: Partial<Note>): Promise<void> => {
+  const noteRef = doc(db, 'notes', noteId);
+  await setDoc(noteRef, updates, { merge: true });
+};
+
 // Delete a note (owner only)
 export const deleteNote = async (noteId: string, userId: string): Promise<boolean> => {
   const noteRef = doc(db, 'notes', noteId);

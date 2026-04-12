@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { getUserNotes, createNote as createNoteFirestore, deleteNote as deleteNoteFirestore } from "../lib/firestore";
+import { getUserNotes, createNote as createNoteFirestore, deleteNote as deleteNoteFirestore, updateNoteMetadata } from "../lib/firestore";
 import { Note } from "../types";
 
 interface NotesContextType {
@@ -12,6 +12,8 @@ interface NotesContextType {
   deleteNote: (noteId: string) => Promise<boolean>;
   refreshNotes: () => Promise<void>;
   updateNoteLocally: (noteId: string, updates: Partial<Note>) => void;
+  togglePin: (noteId: string, currentStatus: boolean) => Promise<void>;
+  toggleStar: (noteId: string, currentStatus: boolean) => Promise<void>;
 }
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
@@ -94,8 +96,34 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     ));
   }, []);
 
+  const togglePin = useCallback(async (noteId: string, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    // Optimistic update
+    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, isPinned: newStatus } : n));
+    try {
+      await updateNoteMetadata(noteId, { isPinned: newStatus });
+    } catch (e) {
+      // Revert if error
+      setNotes(prev => prev.map(n => n.id === noteId ? { ...n, isPinned: currentStatus } : n));
+      console.error("Failed to toggle pin setting", e);
+    }
+  }, []);
+
+  const toggleStar = useCallback(async (noteId: string, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    // Optimistic update
+    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, isStarred: newStatus } : n));
+    try {
+      await updateNoteMetadata(noteId, { isStarred: newStatus });
+    } catch (e) {
+      // Revert if error
+      setNotes(prev => prev.map(n => n.id === noteId ? { ...n, isStarred: currentStatus } : n));
+      console.error("Failed to toggle star setting", e);
+    }
+  }, []);
+
   return (
-    <NotesContext.Provider value={{ notes, loading, createNote, deleteNote, refreshNotes, updateNoteLocally }}>
+    <NotesContext.Provider value={{ notes, loading, createNote, deleteNote, refreshNotes, updateNoteLocally, togglePin, toggleStar }}>
       {children}
     </NotesContext.Provider>
   );
