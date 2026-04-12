@@ -44,10 +44,10 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
           position: "relative",
           width: "100%",
           maxWidth: "400px",
-          background: "rgba(10, 10, 10, 0.7)",
+          background: "var(--card)",
           borderRadius: "32px",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 40px 100px rgba(0, 0, 0, 0.8)",
+          border: "1px solid var(--card-border)",
+          boxShadow: "0 40px 100px rgba(0, 0, 0, 0.3)",
           backdropFilter: "blur(60px)",
           overflow: "hidden",
           animation: "modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
@@ -55,11 +55,11 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
       >
         <div style={{ padding: "24px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#fff", margin: 0 }}>Voice Chat</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Voice Chat</h3>
             <button
               onClick={onClose}
               style={{
-                background: "rgba(255, 255, 255, 0.05)",
+                background: "var(--input-bg)",
                 border: "none",
                 borderRadius: "50%",
                 width: "32px",
@@ -67,7 +67,7 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#6b7280",
+                color: "var(--text-muted)",
                 cursor: "pointer",
               }}
             >
@@ -100,7 +100,7 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                     fontSize: "20px",
                     fontWeight: 800,
                     color: "var(--background)",
-                    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+                    boxShadow: "0 4px 15px var(--card-border)",
                     position: "relative",
                   }}
                 >
@@ -115,18 +115,19 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                       height: "14px",
                       borderRadius: "50%",
                       background: "#22c55e",
-                      border: "3px solid rgba(10, 10, 10, 1)",
+                      border: "3px solid var(--card)",
                     }}
                   />
                 </div>
                 <span
                   style={{
                     fontSize: "12px",
-                    color: "#d1d5db",
+                    color: "var(--text-muted)",
                     textAlign: "center",
                     width: "100%",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {p.username}
@@ -148,10 +149,10 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
                 gap: "8px",
                 padding: "12px",
                 borderRadius: "14px",
-                background: isMuted ? "rgba(239, 68, 68, 0.1)" : "rgba(255, 255, 255, 0.05)",
+                background: isMuted ? "rgba(239, 68, 68, 0.1)" : "var(--input-bg)",
                 border: "1px solid",
-                borderColor: isMuted ? "rgba(239, 68, 68, 0.2)" : "rgba(255, 255, 255, 0.1)",
-                color: isMuted ? "#ef4444" : "#d1d5db",
+                borderColor: isMuted ? "rgba(239, 68, 68, 0.2)" : "var(--input-border)",
+                color: isMuted ? "#ef4444" : "var(--foreground)",
                 fontSize: "14px",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -189,13 +190,13 @@ export default function AudioModal({ isOpen, onClose }: AudioModalProps) {
         {/* Footer info */}
         <div
           style={{
-            background: "rgba(255, 255, 255, 0.02)",
+            background: "var(--input-bg)",
             padding: "12px 24px",
-            borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+            borderTop: "1px solid var(--card-border)",
             textAlign: "center",
           }}
         >
-          <span style={{ fontSize: "11px", color: "#6b7280" }}>
+          <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
             Peer-to-peer encrypted connection
           </span>
         </div>

@@ -24,7 +24,7 @@ export default function Skeleton({
         width,
         height,
         borderRadius,
-        backgroundColor: "rgba(255, 255, 255, 0.05)",
+        backgroundColor: "var(--input-bg)",
         ...style,
       }}
     />

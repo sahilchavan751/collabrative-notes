@@ -190,7 +190,7 @@ export default function SecondarySidebar() {
       {/* Mobile Header Title */}
       {isMobile && (
         <div style={{ padding: "16px 20px 0 20px" }}>
-          <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--foreground)" }}>My Notes</h2>
+          <h2 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)" }}>My Notes</h2>
         </div>
       )}
 
@@ -278,7 +278,7 @@ export default function SecondarySidebar() {
                     WebkitUserSelect: "none"
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive && !isMobile) e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
+                    if (!isActive && !isMobile) e.currentTarget.style.background = "var(--input-bg)";
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive && !isMobile) e.currentTarget.style.background = "transparent";
@@ -331,7 +331,7 @@ export default function SecondarySidebar() {
             transition: "background 0.2s",
           }}
           onMouseEnter={(e) => {
-            if (!isResizing) e.currentTarget.style.background = "rgba(0, 0, 0, 0.1)";
+            if (!isResizing) e.currentTarget.style.background = "var(--input-border)";
           }}
           onMouseLeave={(e) => {
             if (!isResizing) e.currentTarget.style.background = "transparent";

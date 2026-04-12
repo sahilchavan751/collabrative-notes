@@ -29,12 +29,6 @@ export default function BottomNavigation() {
       path: "/notes" 
     },
     { 
-      id: "new", 
-      icon: <Plus size={24} />, 
-      label: "New", 
-      action: () => router.push("/dashboard?action=new") 
-    },
-    { 
       id: "profile", 
       icon: <User size={22} />, 
       label: "Profile", 
@@ -68,42 +62,6 @@ export default function BottomNavigation() {
     >
       {menuItems.map((item) => {
         const isActive = item.path && pathname === item.path;
-        const isNew = item.id === "new";
-
-        if (isNew) {
-          return (
-            <button
-              key={item.id}
-              onClick={item.action}
-              style={{
-                width: "56px",
-                height: "56px",
-                borderRadius: "50%",
-                background: "var(--foreground)",
-                color: "var(--background)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "2px solid var(--background)",
-                transform: "translateY(-16px)",
-                boxShadow: "0 12px 30px rgba(0, 0, 0, 0.4)",
-                cursor: "pointer",
-                transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                zIndex: 10,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-20px) scale(1.05)";
-                e.currentTarget.style.boxShadow = "0 18px 40px rgba(0, 0, 0, 0.5)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(-16px) scale(1)";
-                e.currentTarget.style.boxShadow = "0 12px 30px rgba(0, 0, 0, 0.4)";
-              }}
-            >
-              <Plus size={28} strokeWidth={3} />
-            </button>
-          );
-        }
 
         return (
           <Link
@@ -122,6 +80,7 @@ export default function BottomNavigation() {
               padding: "8px",
               transition: "all 0.2s",
               textDecoration: "none",
+              flex: 1,
             }}
           >
             {item.icon}

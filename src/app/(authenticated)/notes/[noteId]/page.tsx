@@ -62,6 +62,8 @@ function NoteContent() {
     const timeout = setTimeout(async () => {
       try {
         await updateNoteSnapshot(noteId, note?.content || "", newTitle);
+        // Dispatch event so layout can update context independently if needed (alternative logic)
+        window.dispatchEvent(new CustomEvent('note-title-updated', { detail: { id: noteId, title: newTitle } }));
       } catch (err) {
         console.error("Failed to save title:", err);
       }
@@ -504,7 +506,7 @@ ${htmlContent}
                 padding: "8px 16px",
                 borderRadius: "14px",
                 background: "transparent",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
+                border: "1px solid var(--input-border)",
                 color: "var(--foreground)",
                 fontSize: "13px",
                 fontWeight: 700,
@@ -513,12 +515,12 @@ ${htmlContent}
                 letterSpacing: "0.02em",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+                e.currentTarget.style.background = "var(--input-bg)";
+                e.currentTarget.style.borderColor = "var(--foreground)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+                e.currentTarget.style.borderColor = "var(--input-border)";
               }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 14, height: 14, opacity: 0.8 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -542,7 +544,7 @@ ${htmlContent}
                 fontWeight: 800,
                 cursor: "pointer",
                 transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                boxShadow: "0 0 20px rgba(255, 255, 255, 0.1)",
+                boxShadow: "0 0 20px var(--input-border)",
               }}
             >
               <div
@@ -743,7 +745,7 @@ ${htmlContent}
                 borderRadius: "10px",
                 background: showMobileSidebar ? "var(--accent-purple)" : "var(--input-bg)",
                 border: "1px solid var(--card-border)",
-                color: showMobileSidebar ? "#fff" : "var(--text-muted)",
+                color: showMobileSidebar ? "var(--background)" : "var(--text-muted)",
                 fontSize: "13px",
                 fontWeight: 600,
                 cursor: "pointer",

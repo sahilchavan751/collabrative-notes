@@ -49,6 +49,7 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
   
   const [isSynced, setIsSynced] = useState(false);
   const [saving, setSaving] = useState(false);
+  const currentContentRef = useRef<string>("");
 
   useEffect(() => {
     const _ydoc = new Y.Doc();
@@ -81,7 +82,11 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
     }
 
     return () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (currentContentRef.current) {
+        // Synchronous final flush on unmount
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        updateNoteSnapshot(noteId, currentContentRef.current).catch(console.error);
+      }
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
       _provider.destroy();
       _ydoc.destroy();
@@ -172,6 +177,11 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
       ],
       onUpdate: ({ editor }) => {
         const html = editor.getHTML();
+        currentContentRef.current = html;
+
+        // Dispatch a local event so the context can know immediately
+        window.dispatchEvent(new CustomEvent('note-content-updated', { detail: { id: noteId, content: html } }));
+        
         debouncedSave(html);
         handleTyping();
       },
@@ -205,6 +215,12 @@ export default function Editor({ noteId, initialTitle, onTitleChange, onAwarenes
            transition: "all 0.3s ease",
            fontSize: "15px",
            color: "var(--foreground)",
+           cursor: "text",
+        }}
+        onClick={() => {
+          if (editor) {
+            editor.commands.focus();
+          }
         }}
       >
         {editor ? (

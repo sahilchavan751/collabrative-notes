@@ -96,7 +96,7 @@ export default function PrimarySidebar() {
           style={buttonStyle}
           onMouseEnter={(e) => {
             if (!isActive) {
-              e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
+              e.currentTarget.style.background = "var(--input-bg)";
               e.currentTarget.style.color = "var(--foreground)";
             }
           }}
@@ -120,7 +120,7 @@ export default function PrimarySidebar() {
         style={buttonStyle}
         onMouseEnter={(e) => {
           if (!isActive) {
-            e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
+            e.currentTarget.style.background = "var(--input-bg)";
             e.currentTarget.style.color = "var(--foreground)";
           }
         }}

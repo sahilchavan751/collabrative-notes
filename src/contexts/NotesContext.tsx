@@ -96,6 +96,27 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     ));
   }, []);
 
+  // Listen for local custom events dispatched by the Editor/Page to keep context synced continuously
+  useEffect(() => {
+    const handleContentUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ id: string, content: string }>;
+      updateNoteLocally(customEvent.detail.id, { content: customEvent.detail.content });
+    };
+
+    const handleTitleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ id: string, title: string }>;
+      updateNoteLocally(customEvent.detail.id, { title: customEvent.detail.title });
+    };
+
+    window.addEventListener('note-content-updated', handleContentUpdate);
+    window.addEventListener('note-title-updated', handleTitleUpdate);
+
+    return () => {
+      window.removeEventListener('note-content-updated', handleContentUpdate);
+      window.removeEventListener('note-title-updated', handleTitleUpdate);
+    };
+  }, [updateNoteLocally]);
+
   const togglePin = useCallback(async (noteId: string, currentStatus: boolean) => {
     const newStatus = !currentStatus;
     // Optimistic update

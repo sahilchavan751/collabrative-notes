@@ -5,7 +5,7 @@ import React from "react";
 interface UserAvatarProps {
   name: string;
   photoURL?: string | null;
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   showRing?: boolean;
   style?: React.CSSProperties;
 }
@@ -16,9 +16,10 @@ export default function UserAvatar({ name, photoURL, size = "md", showRing = fal
     sm: "h-8 w-8 text-xs",
     md: "h-10 w-10 text-sm",
     lg: "h-14 w-14 text-lg",
+    xl: "h-20 w-20 text-2xl",
   };
 
-  const ringClasses = showRing ? "ring-2 ring-white/30 ring-offset-2 ring-offset-black" : "";
+  const ringClasses = showRing ? "ring-2 ring-accent-purple/30 ring-offset-2 ring-offset-background" : "";
 
   const initials = name
     .split(" ")
@@ -40,8 +41,12 @@ export default function UserAvatar({ name, photoURL, size = "md", showRing = fal
 
   return (
     <div
-      style={style}
-      className={`${sizeClasses[size]} ${ringClasses} flex items-center justify-center rounded-full bg-white font-bold text-black`}
+      style={{
+        ...style,
+        backgroundColor: "var(--accent-purple)",
+        color: "var(--background)",
+      }}
+      className={`${sizeClasses[size]} ${ringClasses} flex items-center justify-center rounded-full font-bold`}
     >
       {initials}
     </div>

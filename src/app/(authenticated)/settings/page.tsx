@@ -90,7 +90,7 @@ export default function SettingsPage() {
             >
               <ChevronLeft size={24} />
             </button>
-            <h2 style={{ fontSize: "17px", fontWeight: 700, color: "var(--foreground)", textTransform: "capitalize" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)", textTransform: "capitalize" }}>
               {activeTab}
             </h2>
           </header>
@@ -224,7 +224,7 @@ export default function SettingsPage() {
     return (
       <div style={{ flex: 1, height: "100%", overflowY: "auto", background: "var(--background)" }}>
         <div style={{ padding: "20px 16px 8px 16px" }}>
-          <h1 style={{ fontSize: "24px", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>Settings</h1>
+          <h1 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Settings</h1>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "2px", padding: "12px" }}>
           <button
@@ -293,7 +293,7 @@ export default function SettingsPage() {
           borderBottom: "1px solid var(--sidebar-border)", 
           display: "flex", 
           alignItems: "center", 
-          padding: "0 32px",
+          padding: "0 28px",
           background: "var(--card)"
         }}>
           <h1 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Settings</h1>
@@ -348,8 +348,8 @@ export default function SettingsPage() {
 
       {/* Main Content Area */}
       <main style={{ flex: 1, overflowY: "auto", position: "relative", background: "var(--background)" }}>
-        <header style={{ height: "72px", borderBottom: "1px solid var(--sidebar-border)", display: "flex", alignItems: "center", padding: "0 40px", background: "var(--background)", backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 10 }}>
-          <h2 style={{ fontSize: "18px", fontWeight: 700, color: "var(--foreground)", textTransform: "capitalize" }}>
+        <header style={{ height: "72px", borderBottom: "1px solid var(--sidebar-border)", display: "flex", alignItems: "center", padding: "0 28px", background: "var(--background)", backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 10 }}>
+          <h2 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)", textTransform: "capitalize" }}>
             {activeTab}
           </h2>
         </header>
