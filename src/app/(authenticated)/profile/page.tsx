@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import UserAvatar from "../../../components/UserAvatar";
 import Skeleton from "../../../components/Skeleton";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfilePage() {
   const { user, userProfile, updateUserProfileData } = useAuth();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   
   const [displayName, setDisplayName] = useState("");
   const [username, setUsername] = useState("");
@@ -47,16 +49,32 @@ export default function ProfilePage() {
       <Toaster position="top-right" />
       
       {/* Header */}
-      <header style={{ height: "72px", borderBottom: "1px solid var(--sidebar-border)", display: "flex", alignItems: "center", padding: "0 40px", background: "var(--background)", backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 10 }}>
-        <h1 style={{ fontSize: "20px", fontWeight: 700, color: "var(--foreground)" }}>Profile Settings</h1>
+      <header style={{ 
+        height: isMobile ? "56px" : "72px", 
+        borderBottom: "1px solid var(--sidebar-border)", 
+        display: "flex", 
+        alignItems: "center", 
+        padding: isMobile ? "0 16px" : "0 40px", 
+        background: "var(--background)", 
+        backdropFilter: "blur(20px)", 
+        position: "sticky", 
+        top: 0, 
+        zIndex: 10 
+      }}>
+        <h1 style={{ fontSize: isMobile ? "17px" : "20px", fontWeight: 700, color: "var(--foreground)" }}>Profile Settings</h1>
       </header>
 
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "60px 40px" }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: isMobile ? "24px 16px" : "60px 40px" }}>
         
-        <div style={{ display: "flex", gap: "60px", alignItems: "flex-start" }}>
+        <div style={{ 
+          display: "flex", 
+          flexDirection: isMobile ? "column" : "row",
+          gap: isMobile ? "24px" : "60px", 
+          alignItems: isMobile ? "center" : "flex-start" 
+        }}>
           
           {/* Avatar Section */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", flexShrink: 0 }}>
             <div style={{ padding: "8px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.05)", border: "2px solid rgba(255, 255, 255, 0.1)" }}>
               <UserAvatar 
                 name={userProfile?.displayName || userProfile?.username || "User"} 
@@ -71,16 +89,16 @@ export default function ProfilePage() {
 
           {/* Form Section */}
           {!userProfile ? (
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}><Skeleton width="100px" height="14px" /><Skeleton width="100%" height="48px" borderRadius="12px" /></div>
               <Skeleton width="200px" height="48px" borderRadius="14px" />
             </div>
           ) : (
-            <form onSubmit={handleSave} style={{ flex: 1, display: "flex", flexDirection: "column", gap: "32px" }}>
+            <form onSubmit={handleSave} style={{ flex: 1, display: "flex", flexDirection: "column", gap: isMobile ? "20px" : "32px", width: "100%" }}>
               
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Full Name</label>
                 <input
                   type="text"
@@ -92,7 +110,7 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Username</label>
                 <div style={{ position: "relative" }}>
                   <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", fontSize: "15px" }}>@</span>
@@ -107,18 +125,18 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <label style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
                 <input
                   type="email"
                   value={user?.email || ""}
                   disabled
-                  style={{ background: "var(--background)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--text-muted)", fontSize: "15px", cursor: "not-allowed", opacity: 0.6 }}
+                  style={{ background: "var(--background)", border: "1px solid var(--input-border)", borderRadius: "12px", padding: "12px 16px", color: "var(--text-muted)", fontSize: "15px", cursor: "not-allowed", opacity: 0.6, width: "100%" }}
                 />
                 <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: 0 }}>Email cannot be changed directly.</p>
               </div>
 
-              <div style={{ paddingTop: "20px" }}>
+              <div style={{ paddingTop: isMobile ? "8px" : "20px" }}>
                 <button
                   type="submit"
                   disabled={saving}
@@ -128,7 +146,7 @@ export default function ProfilePage() {
                     alignItems: "center", 
                     justifyContent: "center", 
                     gap: "10px", 
-                    width: "200px", 
+                    width: isMobile ? "100%" : "200px", 
                     padding: "14px", 
                     borderRadius: "14px",
                     opacity: saving ? 0.7 : 1

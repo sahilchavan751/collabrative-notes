@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
-import { getUserNotes, createNote, deleteNote } from "../../../lib/firestore";
+import { useNotes } from "../../../contexts/NotesContext";
 import { Note } from "../../../types";
 import NoteCard from "../../../components/NoteCard";
 import Skeleton from "../../../components/Skeleton";
@@ -11,28 +11,10 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth();
+  const { notes, loading: loadingNotes, createNote, deleteNote } = useNotes();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [loadingNotes, setLoadingNotes] = useState(true);
   const [creating, setCreating] = useState(false);
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      if (user) {
-        try {
-          const userNotes = await getUserNotes(user.uid);
-          setNotes(userNotes);
-        } catch (err) {
-          console.error("Failed to load notes:", err);
-          toast.error("Failed to load notes");
-        } finally {
-          setLoadingNotes(false);
-        }
-      }
-    };
-    if (user) fetchNotes();
-  }, [user]);
 
   useEffect(() => {
     const action = searchParams.get("action");
@@ -47,7 +29,7 @@ export default function DashboardPage() {
     if (!user) return;
     setCreating(true);
     try {
-      const noteId = await createNote(user.uid);
+      const noteId = await createNote();
       router.push(`/notes/${noteId}`);
     } catch (err) {
       toast.error("Failed to create note");
@@ -58,9 +40,8 @@ export default function DashboardPage() {
   const handleDeleteNote = async (noteId: string) => {
     if (!user) return;
     try {
-      const success = await deleteNote(noteId, user.uid);
+      const success = await deleteNote(noteId);
       if (success) {
-        setNotes((prev) => prev.filter((n) => n.id !== noteId));
         toast.success("Note deleted");
       } else {
         toast.error("You can only delete your own notes");

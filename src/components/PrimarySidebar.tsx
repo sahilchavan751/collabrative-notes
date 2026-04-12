@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
 import UserAvatar from "./UserAvatar";
 
@@ -67,25 +68,56 @@ export default function PrimarySidebar() {
 
   const renderNavItem = (item: any) => {
     const isActive = item.id !== "new" && item.path && pathname === item.path;
+    
+    const buttonStyle: React.CSSProperties = {
+      width: "44px",
+      height: "44px",
+      borderRadius: "12px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: isActive ? "var(--foreground)" : "transparent",
+      color: isActive ? "var(--background)" : "var(--text-muted)",
+      border: item.id === "profile" && !isActive ? "2px solid var(--card-border)" : "none",
+      cursor: "pointer",
+      transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+      overflow: "hidden",
+      textDecoration: "none",
+    };
+
+    // Items with a path use Link for prefetching, action items use button
+    if (item.path) {
+      return (
+        <Link
+          key={item.id}
+          href={item.path}
+          prefetch={true}
+          title={item.label}
+          style={buttonStyle}
+          onMouseEnter={(e) => {
+            if (!isActive) {
+              e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
+              e.currentTarget.style.color = "var(--foreground)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isActive) {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--text-muted)";
+            }
+          }}
+        >
+          {item.icon}
+        </Link>
+      );
+    }
+
     return (
       <button
         key={item.id}
-        onClick={item.action || (() => item.path && router.push(item.path))}
+        onClick={item.action}
         title={item.label}
-        style={{
-          width: "44px",
-          height: "44px",
-          borderRadius: "12px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: isActive ? "var(--foreground)" : "transparent",
-          color: isActive ? "var(--background)" : "var(--text-muted)",
-          border: item.id === "profile" && !isActive ? "2px solid var(--card-border)" : "none",
-          cursor: "pointer",
-          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-          overflow: "hidden"
-        }}
+        style={buttonStyle}
         onMouseEnter={(e) => {
           if (!isActive) {
             e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
@@ -133,7 +165,9 @@ export default function PrimarySidebar() {
           }}
         >
           {/* App Logo Icon */}
-          <div
+          <Link
+            href="/dashboard"
+            prefetch={true}
             style={{
               width: "44px",
               height: "44px",
@@ -145,13 +179,13 @@ export default function PrimarySidebar() {
               color: "var(--background)",
               cursor: "pointer",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              textDecoration: "none",
             }}
-            onClick={() => router.push("/dashboard")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 24, height: 24 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-          </div>
+          </Link>
         </div>
 
         <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>

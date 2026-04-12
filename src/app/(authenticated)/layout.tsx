@@ -8,6 +8,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useRouter, usePathname } from "next/navigation";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { NotesProvider } from "../../contexts/NotesContext";
 
 export default function AuthenticatedLayout({
   children,
@@ -43,6 +44,7 @@ export default function AuthenticatedLayout({
   const isNoteDetailPage = pathname.startsWith("/notes/");
   
   return (
+    <NotesProvider>
     <div style={{ 
       display: "flex", 
       flexDirection: isMobile ? "column" : "row",
@@ -76,5 +78,6 @@ export default function AuthenticatedLayout({
         </React.Fragment>
       )}
     </div>
+    </NotesProvider>
   );
 }

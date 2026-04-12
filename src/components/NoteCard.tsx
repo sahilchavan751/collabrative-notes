@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Note } from "../types";
 
 interface NoteCardProps {
@@ -11,7 +11,6 @@ interface NoteCardProps {
 }
 
 export default function NoteCard({ note, onDelete, isOwner }: NoteCardProps) {
-  const router = useRouter();
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -35,9 +34,11 @@ export default function NoteCard({ note, onDelete, isOwner }: NoteCardProps) {
   };
 
   return (
-    <div
-      onClick={() => router.push(`/notes/${note.id}`)}
+    <Link
+      href={`/notes/${note.id}`}
+      prefetch={true}
       style={{
+        textDecoration: "none",
         padding: "20px",
         borderRadius: "16px",
         background: "var(--card)",
@@ -85,6 +86,7 @@ export default function NoteCard({ note, onDelete, isOwner }: NoteCardProps) {
         {isOwner && (
           <button
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               if (confirm("Are you sure you want to delete this note?")) {
                 onDelete(note.id);
@@ -115,6 +117,6 @@ export default function NoteCard({ note, onDelete, isOwner }: NoteCardProps) {
           </button>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

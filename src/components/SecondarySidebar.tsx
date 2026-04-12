@@ -2,22 +2,22 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
-import { getUserNotes } from "../lib/firestore";
+import { useNotes } from "../contexts/NotesContext";
 import { Note } from "../types";
 import Skeleton from "./Skeleton";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export default function SecondarySidebar() {
   const { user } = useAuth();
+  const { notes, loading } = useNotes();
   const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
   const activeNoteId = params.noteId as string;
   const isMobile = useMediaQuery("(max-width: 768px)");
   
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   
   // Draggable sidebar state
@@ -81,23 +81,6 @@ export default function SecondarySidebar() {
       document.body.style.userSelect = "auto";
     };
   }, [isResizing, resize, stopResizing]);
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      if (user) {
-        setLoading(true);
-        try {
-          const userNotes = await getUserNotes(user.uid);
-          setNotes(userNotes);
-        } catch (err) {
-          console.error("Failed to fetch notes:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    fetchNotes();
-  }, [user]);
 
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -183,9 +166,10 @@ export default function SecondarySidebar() {
               const snippet = note.content.replace(/<[^>]*>/g, "").substring(0, 60);
               
               return (
-                <div
+                <Link
                   key={note.id}
-                  onClick={() => router.push(`/notes/${note.id}`)}
+                  href={`/notes/${note.id}`}
+                  prefetch={true}
                   style={{
                     padding: "14px",
                     borderRadius: "12px",
@@ -193,6 +177,8 @@ export default function SecondarySidebar() {
                     border: isActive ? "1px solid var(--foreground)" : "1px solid transparent",
                     cursor: "pointer",
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                    textDecoration: "none",
+                    display: "block",
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive && !isMobile) e.currentTarget.style.background = "rgba(0, 0, 0, 0.05)";
@@ -207,7 +193,7 @@ export default function SecondarySidebar() {
                   <p style={{ fontSize: "12px", color: isActive ? "var(--background)" : "var(--text-muted)", opacity: isActive ? 0.7 : 1, margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {snippet || "No content..."}
                   </p>
-                </div>
+                </Link>
               );
             })}
           </div>

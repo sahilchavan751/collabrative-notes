@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -105,9 +106,10 @@ export default function BottomNavigation() {
         }
 
         return (
-          <button
+          <Link
             key={item.id}
-            onClick={() => item.path && router.push(item.path)}
+            href={item.path!}
+            prefetch={true}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -119,13 +121,14 @@ export default function BottomNavigation() {
               cursor: "pointer",
               padding: "8px",
               transition: "all 0.2s",
+              textDecoration: "none",
             }}
           >
             {item.icon}
             <span style={{ fontSize: "10px", fontWeight: isActive ? 600 : 500 }}>
               {item.label}
             </span>
-          </button>
+          </Link>
         );
       })}
     </nav>

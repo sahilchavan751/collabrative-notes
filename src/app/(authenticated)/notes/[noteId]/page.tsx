@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../../../../hooks/useAuth";
 import { getNote, updateNoteSnapshot } from "../../../../lib/firestore";
 import { Note } from "../../../../types";
@@ -398,8 +399,9 @@ ${htmlContent}
       >
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "16px", flex: isMobile ? "1 1 100%" : "auto" }}>
           {/* Back button */}
-          <button
-            onClick={() => router.push(isMobile ? "/notes" : "/dashboard")}
+          <Link
+            href={isMobile ? "/notes" : "/dashboard"}
+            prefetch={true}
             style={{
               display: "flex",
               alignItems: "center",
@@ -413,13 +415,14 @@ ${htmlContent}
               fontWeight: 500,
               cursor: "pointer",
               transition: "all 0.2s",
+              textDecoration: "none"
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 14, height: 14 }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             {!isMobile && (isMobile ? "Notes" : "Dashboard")}
-          </button>
+          </Link>
 
           {!isMobile && <div style={{ width: "1px", height: "24px", background: "var(--card-border)", margin: "0 4px" }} />}
 
